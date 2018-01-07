@@ -1,0 +1,17 @@
+[etcds]
+10.0.0.235 ansible_ssh_user=ubuntu
+
+[masters]
+10.0.0.235 ansible_ssh_user=ubuntu
+10.0.0.234 ansible_ssh_user=ubuntu
+
+[nodes]
+10.0.0.235 ansible_ssh_user=ubuntu
+
+
+[kube-cluster:children]
+masters
+nodes
+
+[kube-addon:children]
+masters

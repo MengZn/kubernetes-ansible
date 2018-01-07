@@ -1,0 +1,16 @@
+---
+
+ca_config_path:  "{{ generate_certification_path }}/ca-config.json"
+ca_csr_path:     "{{ generate_certification_path }}/ca-csr.json"
+
+key:
+  algo:          rsa
+  size:          2048
+names:
+  c:             Taiwain
+  st:            Taipei
+  l:             Taipei
+  ou:            Kubernetes
+
+expiry:          87600h
+profile:         kubernetes

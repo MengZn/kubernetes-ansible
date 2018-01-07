@@ -1,0 +1,24 @@
+{
+    "signing": {
+        "default": {
+            "expiry": "8760h"
+        },
+        "profiles": {
+            "kubernetes": {
+                "expiry": "8760h",
+                "usages": [
+                    "signing",
+                    "key encipherment",
+                    "server auth",
+                    "client auth"
+                ]
+            }
+        }
+    }
+}
+/*
+config.json：可以定義多個profiles，分別指定不同的過期時間、使用場景等參數；後續在簽名證書時使用某個profile；
+signing: 表示該證書可用於簽名其它證書；生成的ca.pem 證書中CA=TRUE；
+server auth: 表示client 可以用該CA 對server 提供的證書進行校驗；
+client auth: 表示server 可以用該CA 對client 提供的證書進行驗證。
+ */

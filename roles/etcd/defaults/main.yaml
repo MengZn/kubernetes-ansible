@@ -1,0 +1,10 @@
+---
+etcd_conf_dir: /etc/etcd
+etcd_ssl_dir: /etc/etcd/ssl
+etcd_client_port: 2379
+etcd_peer_port: 2380
+etcd_keys:
+  - 'etcd-ca.pem'
+  - 'etcd-ca-key.pem'
+  - 'etcd.pem'
+  - 'etcd-key.pem'

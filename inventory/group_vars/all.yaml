@@ -1,0 +1,17 @@
+
+# BOOTSTRAP_TOKEN=$(head -c 16 /dev/urandom | od -An -t x | tr -d ' ')
+# BOOTSTRAP_TOKEN="8981b594122ebed7596f1d3b69c78223"
+#
+# SERVICE_CIDR="10.254.0.0/16"
+#
+# CLUSTER_CIDR="172.30.0.0/16"
+#
+# NODE_PORT_RANGE="30000-32766"
+#
+#
+# CLUSTER_KUBERNETES_SVC_IP="10.254.0.1"
+# CLUSTER_DNS_SVC_IP="10.254.0.2"
+# CLUSTER_DNS_DOMAIN="cluster.local."
+# MASTER_URL="k8s-api.virtual.local"
+
+generate_certification_path: /etc/ssl/certs/kubernetes
