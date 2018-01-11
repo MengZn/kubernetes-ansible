@@ -1,0 +1,17 @@
+---
+
+packages:
+  cfssl:
+    name:     cfssl
+    url:      "{{ source.cfssl.url }}/{{ source.cfssl.version }}"
+    file:     cfssl_linux-amd64
+    symlinks: [ 'cfssl' ]
+    file:     cfssl_linux-amd64
+    dir:      /opt/cfssl
+  cfssljson:
+    name:     cfssljson
+    url:      "{{ source.cfssljson.url }}/{{ source.cfssljson.version }}"
+    file:     cfssljson_linux-amd64
+    symlinks: [ 'cfssljson' ]
+    file:     cfssljson_linux-amd64
+    dir:      /opt/cfssl

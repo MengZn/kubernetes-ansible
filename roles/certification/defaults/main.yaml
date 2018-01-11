@@ -1,0 +1,50 @@
+---
+etcd:
+  hosts:           "{% for node in groups['etcds'] %}{{ node }}{% endfor %}"
+  path:            "{{ certification.path }}/{{ certification.etcd.name }}"
+  server_bare:     "{{ certification.etcd.name }}-ca"
+  client_bare:     "{{ certification.etcd.name }}-client"
+  ca_config_path:  "{{ certification.path }}/{{ certification.etcd.name }}/{{ certification.etcd.name }}-{{ certification.ca_config }}"
+  ca_csr_path:     "{{ certification.path }}/{{ certification.etcd.name }}/{{ certification.etcd.name }}-{{ certification.ca_csr }}"
+  client_csr_path: "{{ certification.path }}/{{ certification.etcd.name }}/{{ certification.etcd.name }}-{{ certification.client_csr }}"
+  name:            "{{ certification.etcd.name }}"
+  org:             "{{ certification.etcd.name }}"
+ca:
+  hosts:           "{% for node in groups['masters'] %}{{ node }}{% endfor %}"
+  path:            "{{ certification.path }}/{{ certification.ca.name }}"
+  server_bare:     "{{ certification.ca.name }}-ca"
+  client_bare:     "{{ certification.ca.name }}-client"
+  ca_config_path:  "{{ certification.path }}/{{ certification.ca.name }}/{{ certification.ca.name }}-{{ certification.ca_config }}"
+  ca_csr_path:     "{{ certification.path }}/{{ certification.ca.name }}/{{ certification.ca.name }}-{{ certification.ca_csr }}"
+  client_csr_path: "{{ certification.path }}/{{ certification.ca.name }}/{{ certification.ca.name }}-{{ certification.client_csr }}"
+  name:            "{{ certification.kubernetes.name }}"
+  org:             "{{ certification.kubernetes.name }}"
+
+packages:
+  cfssl:
+    name:          cfssl
+    url:           "{{ source.cfssl.url }}/{{ source.cfssl.version }}"
+    file:          cfssl_linux-amd64
+    dir:           /opt/cfssl
+
+  cfssljson:
+    name:          cfssljson
+    url:           "{{ source.cfssljson.url }}/{{ source.cfssljson.version }}"
+    file:          cfssljson_linux-amd64
+    dir:           /opt/cfssljson
+
+key:
+  algo:            rsa
+  size:            2048
+names:
+  c:               Taiwain
+  st:              Taipei
+  l:               Taipei
+  ou:              Kubernetes
+
+expiry:            87600h
+profile:           kubernetes
+
+fetch_ca:
+  - ca
+  - etcd

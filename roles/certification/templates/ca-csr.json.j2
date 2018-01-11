@@ -1,5 +1,5 @@
 {
-  "CN": "{{ item.name }}",
+  "CN": "{{ item.1.name }}",
   "key": {
     "algo": "{{ key.algo }}",
     "size": {{ key.size }}
@@ -9,7 +9,7 @@
       "C": "{{ names.c }}",
       "ST": "{{ names.st }}",
       "L": "{{ names.l }}",
-      "O": "{{ item.org }}",
+      "O": "{{ item.1.org }}",
       "OU": "{{ names.ou }}"
     }
   ]

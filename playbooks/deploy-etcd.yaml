@@ -1,0 +1,6 @@
+---
+
+- hosts: etcds
+  become: yes
+  roles:
+    - { role: etcd, tags: etcd }

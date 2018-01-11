@@ -14,4 +14,32 @@
 # CLUSTER_DNS_DOMAIN="cluster.local."
 # MASTER_URL="k8s-api.virtual.local"
 
-generate_certification_path: /etc/ssl/certs/kubernetes
+certification:
+  local_ssl:    /tmp/ssl/
+  path:         /etc/ssl/certs/kubernetes
+  ca_config:    ca-config.json
+  ca_csr:       ca-csr.json
+  client_csr:   client-csr.json
+
+  etcd:
+    name:       etcd
+  ca:
+    name:       ca
+
+  kubernetes:
+    name:       kubernetes
+
+
+
+download:       /tmp
+bin:            /usr/bin
+source:
+  cfssl:
+    url:        https://pkg.cfssl.org
+    version:    R1.2
+  cfssljson:
+    url:        https://pkg.cfssl.org
+    version:    R1.2
+  etcd:
+    url:        https://github.com/coreos/etcd/releases/download
+    version:    v3.2.13

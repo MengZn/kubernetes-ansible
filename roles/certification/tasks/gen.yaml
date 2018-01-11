@@ -1,0 +1,36 @@
+---
+
+- name:        Create SSL CA files
+  shell:       |
+    cfssl gencert -initca {{ item.ca_csr_path }} | \
+    cfssljson -bare {{ item.path }}/{{ item.server_bare }}
+  with_items:
+    - "{{ ca }}"
+    - "{{ etcd }}"
+  delegate_to: "{{ groups['masters'][0] }}"
+  run_once:    true
+
+- name:        create certificate and private key
+  shell:       |
+    cd {{ item.path }} &&
+    cfssl gencert \
+    -ca={{ item.path }}/{{ item.server_bare }}.pem \
+    -ca-key={{ item.path }}/{{ item.server_bare}}-key.pem \
+    -config={{ item.ca_config_path }} \
+    -hostname={{ item.hosts }} \
+    -profile={{ profile }} \
+    {{ item.client_csr_path }} | cfssljson -bare {{ item.client_bare }}
+  with_items:
+    - "{{ ca }}"
+    - "{{ etcd }}"
+  delegate_to: "{{ groups['masters'][0] }}"
+  run_once:    true
+
+- name:        Fetch ca files to deploy node
+  fetch:
+    src:       "{{ certification.path }}/{{ item[0] }}/{{ item[0] }}{{ item[1] }}"
+    dest:      "{{ certification.local_ssl }}/{{ item[0] }}/{{ item[0] }}{{ item[1] }}"
+    flat:      yes
+  with_nested:
+    - "{{ fetch_ca }}"
+    - [-ca.pem, -ca.csr, -ca-key.pem,-client.csr, -client-key.pem, -client.pem]

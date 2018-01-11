@@ -1,0 +1,26 @@
+---
+
+# - name:         Determine if temp download directory exist,If not, then set up directory.
+#   file:         path={{ download }} state=directory
+#   when: parameter is defined
+
+
+# - name:         "Downloading {{  parameter.name }} "
+#   # when:       not pkg_check.stat.exists
+#   when: parameter is defined
+#   get_url:
+#     url:        "{{  parameter.url }}/{{  parameter.file }}"
+#     dest:       "{{ download }}/{{  parameter.file }}"
+#     # validate_certs: False
+#   # register:   pkg_download
+#
+# - name:         "Copy {{  parameter.name }} file to  {{  parameter.dir }}."
+#   when: parameter is defined
+#   copy:
+#     src:        "{{ download }}/{{  parameter.file }}"
+#     dest:       "{{  parameter.dir }}"
+#     owner:      root
+#     mode:       0755
+#     remote_src: True
+  # with_items: "{{ pkg['symlinks'] }}"
+  # register:   pkg_copy

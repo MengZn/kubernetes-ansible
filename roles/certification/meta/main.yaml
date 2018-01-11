@@ -1,0 +1,3 @@
+dependencies:
+      - { role: common, parameter: "{{ packages.cfssl }}"}
+      - { role: common, parameter: "{{ packages.cfssljson }}"}

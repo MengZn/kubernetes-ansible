@@ -1,0 +1,66 @@
+---
+
+- include:            ca-tool.yaml
+
+- name:               Determine if SSL certificate directory exist,If not, then set up directory.
+  file:
+    path:             "{{ item.path }}"
+    state:            directory
+  with_items:
+    - "{{ ca }}"
+    - "{{ etcd }}"
+  delegate_to:        "{{ groups['masters'][0] }}"
+  run_once:           true
+  register:           ssl_directory
+
+- name:               Determine if SSL CA config exist.
+  stat:
+    path:             "{{ item.ca_config_path }}"
+  with_items:
+    - "{{ ca }}"
+    - "{{ etcd }}"
+  delegate_to:        "{{ groups['masters'][0] }}"
+  run_once:           true
+  register:           ca_config
+
+- name:               If not, then set up SSL CA config.
+  when:               "{{ not ca_config.results[item.0].stat.exists }}"
+  template:
+    src:              ca-config.json.j2
+    dest:             "{{ item.1.ca_config_path }}"
+    owner:            root
+    group:            root
+    mode:             '0600'
+  with_indexed_items:
+    - "{{ ca }}"
+    - "{{ etcd }}"
+  delegate_to:        "{{ groups['masters'][0] }}"
+  run_once:           true
+
+- name:               Determine if SSL certificate config exist
+  stat:
+    path:             "{{ item.ca_csr_path }}"
+  with_items:
+    - "{{ ca }}"
+    - "{{ etcd }}"
+  delegate_to:        "{{ groups['masters'][0] }}"
+  run_once:           true
+  register:           csr_config
+
+- name:               If not, then set up SSL certificate config
+  when:               "{{ not csr_config.results[item.0].stat.exists }}"
+  template:
+    src:              ca-csr.json.j2
+    dest:             "{{ item.1.ca_csr_path }}"
+    owner:            root
+    group:            root
+    mode:             '0600'
+  with_indexed_items:
+    - "{{ ca }}"
+    - "{{ etcd }}"
+  delegate_to:        "{{ groups['masters'][0] }}"
+  run_once:           true
+
+- include:            client.yaml
+
+- include:            gen.yaml

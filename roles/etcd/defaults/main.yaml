@@ -1,10 +1,45 @@
 ---
-etcd_conf_dir: /etc/etcd
-etcd_ssl_dir: /etc/etcd/ssl
-etcd_client_port: 2379
-etcd_peer_port: 2380
-etcd_keys:
-  - 'etcd-ca.pem'
-  - 'etcd-ca-key.pem'
-  - 'etcd.pem'
-  - 'etcd-key.pem'
+etcd_group:                       etcds
+etcd_iface:                       "{{ api_interface_name }}"
+etcd_client_port:                 2379
+etcd_peer_port:                   2380
+etcd_ip_addr:                     "{% if etcd_iface != '' %}{{ hostvars[inventory_hostname]['ansible_' + etcd_iface].ipv4.address }}
+{%- else %}{{ hostvars[inventory_hostname].ansible_default_ipv4.address }}{% endif %}"
+etcd_listen_peer_urls:            "https://0.0.0.0:{{ etcd_peer_port }}"
+etcd_advertise_client_urls:       "https://{{ etcd_ip_addr }}:{{ etcd_client_port }}"
+etcd_listen_client_urls:          "https://0.0.0.0:{{ etcd_client_port }}"
+etcd_initial_advertise_peer_urls: "https://{{ etcd_ip_addr }}:{{ etcd_peer_port }}"
+
+packages:
+  etcd:
+    name:                         etcd
+    url:                          "{{ source.etcd.url }}/{{ source.etcd.version }}"
+    file:                         "etcd-{{ source.etcd.version }}-linux-amd64"
+    format:                       ".tar.gz"
+    dir:                          /opt/etcd
+    archive:
+      state:                      true
+      dir:                        /opt
+      file:
+        - "etcd"
+        - "etcdctl"
+
+directory:                        /etc/etcd
+directory_ssl:                    /etc/etcd/ssl
+directory_data:                   /var/lib/etcd
+directory_systemd:                /etc/systemd/system
+etcd_client_port:                 2379
+etcd_peer_port:                   2380
+
+etcd_ssl:
+  - "{{ certification.etcd.name }}-ca.pem"
+  - "{{ certification.etcd.name }}-client-key.pem"
+  - "{{ certification.etcd.name }}-client.pem"
+
+ca:                               "{{ directory_ssl }}/{{ certification.etcd.name }}-ca.pem"
+cert:                             "{{ directory_ssl }}/{{ certification.etcd.name }}-client.pem"
+cert_key:                         "{{ directory_ssl }}/{{ certification.etcd.name }}-client-key.pem"
+
+
+initial_cluster_state:            new
+initial_cluster_token:            etcd-cluster

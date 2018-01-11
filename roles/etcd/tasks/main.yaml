@@ -1,0 +1,54 @@
+---
+- name:               Determine if temp download directory exist,If not, then set up directory.
+  file:
+    path:             "{{ download }}"
+    state:            directory
+
+- name:               Determine if etcd exist.
+  stat:
+    path:             "{{ download }}/{{ item.name }}"
+  register:           tmp_etcd
+  with_items:
+  - "{{ packages.etcd }}"
+
+- name:               Download etcd.
+  get_url:
+    url:              "{{ item.1.url }}/{{ item.1.file }}{{ item.1.format }}"
+    dest:             "{{ download }}/{{ packages.etcd.file }}{{ item.1.format }}"
+  # when:             "{{ not tmp_etcd.results[item.0].stat.exists }}"
+  with_indexed_items:
+  - "{{ packages.etcd }}"
+  register:           etcd_down
+
+- name:               Unarchive etcd.
+  unarchive:
+    src:              "{{ download }}/{{ item.1.file }}{{ item.1.format }}"
+    dest:             "{{ item.1.archive.dir }}"
+    copy:             no
+  # when:             "{{ not etcd_current_dir.results[item.0].stat.exists and etcd_down }}"
+  with_indexed_items:
+  - "{{ packages.etcd }}"
+  register:           etcd_unarchived
+
+- name:               Determine if Symlinks etcd exist.
+  stat:
+    path:             "{{ bin }}/{{ item }}"
+  register:           symlinks_etcd
+  with_items:
+  - "{{ packages.etcd.archive.file }}"
+
+- name:               Symlinks etcd
+  file:
+    src:              "{{ packages.etcd.archive.dir }}/{{ packages.etcd.file }}/{{ item.1 }}"
+    dest:             "{{ bin }}/{{ item.1 }}"
+    state:            link
+    force:            yes
+  # when:             "{{ not symlinks_etcd.results[item.0].stat.exists and etcd_tool }}"
+  with_indexed_items:
+  - "{{ packages.etcd.archive.file }}"
+
+- name:               Etcd configuration
+  include:            config.yaml
+
+- name:               Add Etcd systemd service
+  include_tasks:      systemd.yaml
