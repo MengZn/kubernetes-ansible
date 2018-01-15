@@ -1,12 +1,14 @@
 [etcds]
-10.0.0.20 ansible_ssh_user=vagrant etcd_interface=enp0s8 
+10.0.0.20 ansible_ssh_user=vagrant etcd_interface=enp0s8
+10.0.0.21 ansible_ssh_user=vagrant etcd_interface=enp0s8
 
 [masters]
-10.0.0.20 ansible_ssh_user=vagrant
+10.0.0.20 ansible_ssh_user=vagrant etcd_interface=enp0s8
+10.0.0.21 ansible_ssh_user=vagrant etcd_interface=enp0s8
 
 [nodes]
-10.0.0.20 ansible_ssh_user=vagrant
-
+10.0.0.20 ansible_ssh_user=vagrant etcd_interface=enp0s8
+10.0.0.21 ansible_ssh_user=vagrant etcd_interface=enp0s8
 
 [kube-cluster:children]
 masters

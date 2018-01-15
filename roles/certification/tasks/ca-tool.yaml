@@ -1,11 +1,4 @@
 ---
-- name:               Determine if temp download directory exist,If not, then set up directory.
-  file:
-    path:             "{{ download }}"
-    state:            directory
-  delegate_to:        "{{ groups['masters'][0] }}"
-  run_once:           true
-
 - name:               Determine if tools exist.
   stat:
     path:             "{{ download }}/{{ item.file }}"
@@ -39,7 +32,7 @@
   - "{{ packages.cfssljson }}"
 
 - name:               copy CA tools to current directory.
-  when:              "{{ not ca_tool_current_dir.results[item.0].stat.exists and ca_tool_down}}"
+  when:               "{{ not ca_tool_current_dir.results[item.0].stat.exists }}"
   copy:
     src:              "{{ download }}/{{  item.1.file }}"
     dest:             "{{ item.1.dir }}"

@@ -1,6 +1,6 @@
 ---
 etcd:
-  hosts:           "{% for node in groups['etcds'] %}{{ node }}{% endfor %}"
+  hosts:           "{% for node in groups['etcds'] %}{{ node }}{% if not loop.last %},{% endif %}{% endfor %}"
   path:            "{{ certification.path }}/{{ certification.etcd.name }}"
   server_bare:     "{{ certification.etcd.name }}-ca"
   client_bare:     "{{ certification.etcd.name }}-client"
@@ -10,7 +10,7 @@ etcd:
   name:            "{{ certification.etcd.name }}"
   org:             "{{ certification.etcd.name }}"
 ca:
-  hosts:           "{% for node in groups['masters'] %}{{ node }}{% endfor %}"
+  hosts:           "{% for node in groups['masters'] %}{{ node }},{% endfor %}"
   path:            "{{ certification.path }}/{{ certification.ca.name }}"
   server_bare:     "{{ certification.ca.name }}-ca"
   client_bare:     "{{ certification.ca.name }}-client"

@@ -33,4 +33,4 @@
     flat:      yes
   with_nested:
     - "{{ fetch_ca }}"
-    - [-ca.pem, -ca.csr, -ca-key.pem,-client.csr, -client-key.pem, -client.pem]
+    - [-ca.pem,-ca-config.json, -ca.csr, -ca-key.pem,-client.csr, -client-key.pem, -client.pem]
