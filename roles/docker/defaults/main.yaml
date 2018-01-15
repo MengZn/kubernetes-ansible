@@ -1,0 +1,9 @@
+---
+
+packages:
+  docker:
+    name:           docker
+    url:            "{{ source.docker.url }}/{{ source.docker.version }}/docker-{{ source.docker.ver }}-{{ source.docker.edition }}"
+    format:         ".tgz"
+
+directory_systemd:  /etc/systemd/system

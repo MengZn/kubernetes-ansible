@@ -1,0 +1,56 @@
+---
+- name:            Determine if docker binaries installation exist.
+  stat:
+    path:          "{{ opt }}/{{ packages.docker.name }}"
+  changed_when:    false
+  register:        docker_bin
+
+- name:            If not, then set up docker.
+  when:            not docker_bin.stat.exists
+  block:
+    - name:        Download docker binaries.
+      get_url:
+        url:       "{{ packages.docker.url }}{{ packages.docker.format }}"
+        dest:      "{{ download }}/{{ packages.docker.name }}{{ packages.docker.format }}"
+        mode:      0755
+
+    - name:        Unarchive Docker binaries.
+      unarchive:
+        src:       "{{ download }}/{{ packages.docker.name }}{{ packages.docker.format }}"
+        dest:      "{{ opt }}"
+        copy:      no
+        mode:      0755
+
+  always:
+    - name:        Clean temporary files.
+      file:
+        path:      "{{ download }}/{{ packages.docker.name }}{{ packages.docker.format }}"
+        state:     absent
+
+- name:            Link Docker binaries
+  file:
+    src:           "{{ opt }}/{{ packages.docker.name }}/{{ item }}"
+    dest:          "{{ bin }}/{{ item }}"
+    state:         link
+    force:         yes
+  with_items:
+    - docker
+    - docker-containerd
+    - docker-containerd-ctr
+    - docker-containerd-shim
+    - dockerd
+    - docker-init
+    - docker-proxy
+    - docker-runc
+
+- name:            Copy docker systemd
+  template:
+    src:           docker.service.j2
+    dest:          "{{ directory_systemd }}/docker.service"
+
+- name:            Enable and restart Docker
+  systemd:
+    name:          docker
+    daemon_reload: yes
+    state:         restarted
+    enabled:       yes
