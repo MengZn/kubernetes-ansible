@@ -1,0 +1,7 @@
+---
+packages:
+  kubectl:
+    name:  kubectl
+    dir: /opt/kubernetes
+    url: "{{ source.kubectl.url }}/{{ source.kubectl.version }}/bin/{{ source.kubectl.architecture}}/kubectl"
+# /{{ source.kubectl.version }}/bin/{{ source.kubectl.architecture}}/kubectl

@@ -6,12 +6,30 @@
   with_items:
     - "{{ ca }}"
     - "{{ etcd }}"
+    - "{{ admin }}"
+    - "{{ apiserver }}"
+    - "{{ controller }}"
+    - "{{ kubelet }}"
+    - "{{ scheduler }}"
   delegate_to:        "{{ groups['masters'][0] }}"
   run_once:           true
   register:           client_csr_path
 
+# - name:             Determine if Kubernetes client certificate config exist
+#   stat:
+#     path:           "{{ item.client_csr_path }}"
+#   with_items:
+#     - "{{ admin }}"
+#     - "{{ apiserver }}"
+#     - "{{ controller }}"
+#     - "{{ kubelet }}"
+#     - "{{ scheduler }}"
+#   delegate_to:      "{{ groups['masters'][0] }}"
+#   run_once:         true
+#   register:         k8s_client_csr_path
+
 - name:               If not, then set up client certificate config
-  when:               not  client_csr_path.results[item.0].stat.exists 
+  when:               not  client_csr_path.results[item.0].stat.exists
   template:
     src:              ca-csr.json.j2
     dest:             "{{ item.1.client_csr_path }}"
@@ -21,5 +39,27 @@
   with_indexed_items:
     - "{{ ca }}"
     - "{{ etcd }}"
+    - "{{ admin }}"
+    - "{{ apiserver }}"
+    - "{{ controller }}"
+    - "{{ kubelet }}"
+    - "{{ scheduler }}"
   delegate_to:        "{{ groups['masters'][0] }}"
   run_once:           true
+
+# - name:               If not, then set up kubernetes client certificate config
+#   when:               not  k8s_client_csr_path.results[item.0].stat.exists
+#   template:
+#     src:              ca-csr.json.j2
+#     dest:             "{{ item.1.client_csr_path }}"
+#     owner:            root
+#     group:            root
+#     mode:             '0600'
+#   with_indexed_items:
+#     - "{{ admin }}"
+#     - "{{ apiserver }}"
+#     - "{{ controller }}"
+#     - "{{ kubelet }}"
+#     - "{{ scheduler }}"
+#   delegate_to:        "{{ groups['masters'][0] }}"
+#   run_once:           true

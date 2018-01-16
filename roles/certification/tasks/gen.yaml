@@ -14,8 +14,8 @@
   shell:       |
     cd {{ item.path }} &&
     cfssl gencert \
-    -ca={{ item.path }}/{{ item.server_bare }}.pem \
-    -ca-key={{ item.path }}/{{ item.server_bare}}-key.pem \
+    -ca={{ item.ca_path }}/{{ item.server_bare }}.pem \
+    -ca-key={{ item.ca_path }}/{{ item.server_bare}}-key.pem \
     -config={{ item.ca_config_path }} \
     -hostname={{ item.hosts }} \
     -profile={{ profile }} \
@@ -23,10 +23,15 @@
   with_items:
     - "{{ ca }}"
     - "{{ etcd }}"
+    - "{{ admin }}"
+    - "{{ apiserver }}"
+    - "{{ controller }}"
+    - "{{ kubelet }}"
+    - "{{ scheduler }}"
   delegate_to: "{{ groups['masters'][0] }}"
   run_once:    true
 
-- name:        Fetch ca files to deploy node
+- name:        Fetch kubernetes ca files to deploy node
   fetch:
     src:       "{{ certification.path }}/{{ item[0] }}/{{ item[0] }}{{ item[1] }}"
     dest:      "{{ certification.local_ssl }}/{{ item[0] }}/{{ item[0] }}{{ item[1] }}"

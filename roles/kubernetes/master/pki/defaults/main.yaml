@@ -1,0 +1,8 @@
+---
+
+fetch_ca:
+  - apiserver
+  - kubelet
+  - admin
+  - controller
+  - scheduler

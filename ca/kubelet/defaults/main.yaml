@@ -1,0 +1,7 @@
+---
+
+packages:
+  kubelet:
+    name:     kubelet
+    dir:      /opt/kubernetes
+    url:      "{{ source.kubelet.url }}/{{ source.kubelet.version }}/bin/{{ source.kubelet.architecture}}/kubelet"

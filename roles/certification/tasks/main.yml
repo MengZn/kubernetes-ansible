@@ -9,6 +9,11 @@
   with_items:
     - "{{ ca }}"
     - "{{ etcd }}"
+    - "{{ admin }}"
+    - "{{ apiserver }}"
+    - "{{ controller }}"
+    - "{{ kubelet }}"
+    - "{{ scheduler }}"
   delegate_to:        "{{ groups['masters'][0] }}"
   run_once:           true
   register:           ssl_directory

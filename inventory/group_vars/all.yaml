@@ -15,37 +15,60 @@
 # MASTER_URL="k8s-api.virtual.local"
 
 certification:
-  local_ssl:    /tmp/ssl/
-  path:         /etc/ssl/certs/kubernetes
-  ca_config:    ca-config.json
-  ca_csr:       ca-csr.json
-  client_csr:   client-csr.json
+  local_ssl:      /tmp/ssl
+  path:           /etc/ssl/certs/kubernetes
+  ca_config:      ca-config.json
+  ca_csr:         ca-csr.json
+  client_csr:     client-csr.json
 
   etcd:
-    name:       etcd
+    name:         etcd
   ca:
-    name:       ca
-
+    name:         ca
+  admin:
+    name:         admin
+  controller:
+    name:         controller
+  apiserver:
+    name:         apiserver
+  kubelet:
+    name:         kubelet
+  scheduler:
+    name:         scheduler
   kubernetes:
-    name:       kubernetes
+    name:         kubernetes
 
+kubernetes:
+  dir:            /etc/kubernetes
+  pki:            /etc/kubernetes/pki
 
-
-download:       /tmp
-opt:            /opt
-bin:            /usr/local/bin
+download:         /tmp
+opt:              /opt
+bin:              /usr/local/bin
 source:
+# CA
   cfssl:
-    url:        https://pkg.cfssl.org
-    version:    R1.2
+    url:          https://pkg.cfssl.org
+    version:      R1.2
   cfssljson:
-    url:        https://pkg.cfssl.org
-    version:    R1.2
+    url:          https://pkg.cfssl.org
+    version:      R1.2
+# ETCD
   etcd:
-    url:        https://github.com/coreos/etcd/releases/download
-    version:    v3.2.13
+    url:          https://github.com/coreos/etcd/releases/download
+    version:      v3.2.13
+# CRI
   docker:
-    url:        https://download.docker.com
-    ver:        17.12.0
-    edition:    ce
-    version:    "{{ansible_system | lower}}/static/stable/{{ansible_architecture}}"
+    url:          https://download.docker.com
+    ver:          17.12.0
+    edition:      ce
+    version:      "{{ansible_system | lower}}/static/stable/{{ ansible_architecture }}"
+# Kubernetes
+  kubectl:
+    url:          https://storage.googleapis.com/kubernetes-release/release
+    version:      v1.9.0
+    architecture: "{{ansible_system | lower}}/amd64"
+  kubelet:
+    url:          https://storage.googleapis.com/kubernetes-release/release
+    version:      v1.9.0
+    architecture: "{{ansible_system | lower}}/amd64"

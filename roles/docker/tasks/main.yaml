@@ -1,12 +1,12 @@
 ---
-- name:            Determine if docker binaries installation exist.
+- name:          Determine if docker binaries installation exist.
   stat:
-    path:          "{{ opt }}/{{ packages.docker.name }}"
-  changed_when:    false
-  register:        docker_bin
+    path:        "{{ opt }}/{{ packages.docker.name }}"
+  changed_when:  false
+  register:      docker_bin
 
 - name:            If not, then set up docker.
-  when:            not docker_bin.stat.exists
+  when:          not docker_bin.stat.exists
   block:
     - name:        Download docker binaries.
       get_url:
@@ -20,7 +20,6 @@
         dest:      "{{ opt }}"
         copy:      no
         mode:      0755
-
   always:
     - name:        Clean temporary files.
       file:

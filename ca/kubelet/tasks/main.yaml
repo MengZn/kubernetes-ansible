@@ -1,0 +1,61 @@
+---
+# - name:          Determine if Kubernetes etc directory exist.if not ,set up .
+#   file:
+#     path:        {{ kubernetes.dir }}
+#     state:       directory
+#
+# - name:          Determine if kubelet binaries installation exist.
+#   stat:
+#     path:        "{{ opt }}/{{ packages.kubelet.name }}"
+#   changed_when:  false
+#   register:      kubelet_bin
+#
+# - name:          If not, then set up kubelet.
+#   when:          not kubelet_bin.stat.exists
+#   block:
+#     - name:      Download kubelet binaries.
+#       get_url:
+#         url:     "{{ packages.kubelet.url }}"
+#         dest:    "{{ download }}/{{ packages.kubelet.name }}"
+#         mode:    0755
+#
+#     - name:      Docker binaries.
+#       unarchive:
+#         src:     "{{ download }}/{{ packages.docker.name }}{{ packages.docker.format }}"
+#         dest:    "{{ opt }}"
+#         copy:    no
+#         mode:    0755
+
+#   always:
+#     - name:    Clean temporary files.
+#       file:
+#         path:  "{{ download }}/{{ packages.kubelet.name }}"
+#         state: absent
+#
+# - name:        Link Docker binaries
+#   file:
+#     src:       "{{ opt }}/{{ packages.docker.name }}/{{ item }}"
+#     dest:      "{{ bin }}/{{ item }}"
+#     state:     link
+#     force:     yes
+#   with_items:
+#     - docker
+#     - docker-containerd
+#     - docker-containerd-ctr
+#     - docker-containerd-shim
+#     - dockerd
+#     - docker-init
+#     - docker-proxy
+#     - docker-runc
+#
+# - name:        Copy docker systemd
+#   template:
+#     src:       docker.service.j2
+#     dest:      "{{ directory_systemd }}/docker.service"
+#
+# - name:        Enable and restart Docker
+#   systemd:
+#     name:      docker
+#     daemon_reload: yes
+#     state:     restarted
+#     enabled:   yes
