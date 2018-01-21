@@ -29,14 +29,14 @@ ETCD_MAX_SNAPSHOTS="{{ max_snapshots }}"
 ETCD_MAX_WALS="{{ max_wals }}"
 
 #[Private CA]
-ETCD_CERT_FILE="{{ cert }}"
-ETCD_KEY_FILE="{{ cert_key }}"
-ETCD_PEER_CERT_FILE="{{ cert }}"
-ETCD_PEER_KEY_FILE="{{ cert_key }}"
+ETCD_CERT_FILE="{{ etcd_cert }}"
+ETCD_KEY_FILE="{{ etcd_cert_key }}"
+ETCD_PEER_CERT_FILE="{{ etcd_cert }}"
+ETCD_PEER_KEY_FILE="{{ etcd_cert_key }}"
 
 # [Center CA]
-ETCD_TRUSTED_CA_FILE="{{ca}}"
-ETCD_PEER_TRUSTED_CA_FILE="{{ca}}"
+ETCD_TRUSTED_CA_FILE="{{etcd_ca}}"
+ETCD_PEER_TRUSTED_CA_FILE="{{etcd_ca}}"
 
 #[Conneted URLS]
 

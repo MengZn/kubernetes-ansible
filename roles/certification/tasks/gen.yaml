@@ -49,7 +49,7 @@
   delegate_to: "{{ groups['masters'][0] }}"
   run_once:    true
   with_nested:
-    - "{{ certification }}"
+    - "{{ kubernetes.certification }}"
     - [-ca.pem,-ca.csr,-ca-key.pem,-client.csr,-client-key.pem,-client.pem]
 
 - name:        Fetch token.csv files to deploy node

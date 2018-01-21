@@ -2,7 +2,6 @@
 - name:          Determine if docker binaries installation exist.
   stat:
     path:        "{{ opt }}/{{ packages.docker.name }}"
-  changed_when:  false
   register:      docker_bin
 
 - name:            If not, then set up docker.

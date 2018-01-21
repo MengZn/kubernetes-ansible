@@ -16,8 +16,6 @@ packages:
     file:                         "etcd-{{ source.etcd.version }}-linux-amd64"
     format:                       ".tar.gz"
     archive:
-      state:                      true
-      dir:                        /opt
       file:
         - "etcd"
         - "etcdctl"
@@ -40,13 +38,16 @@ max_snapshots:                    5
 max_wals:                         5
 
 etcd_ssl:
-  - "{{ certification.etcd.name }}-ca.pem"
-  - "{{ certification.etcd.name }}-client-key.pem"
-  - "{{ certification.etcd.name }}-client.pem"
+  - "etcd-ca.pem"
+  - "etcd-client-key.pem"
+  - "etcd-client.pem"
+  - "etcd-ca-key.pem"
+  - "etcd-client.csr"
+  - "etcd-ca.csr"
 
-ca:                               "{{ directory_ssl }}/{{ certification.etcd.name }}-ca.pem"
-cert:                             "{{ directory_ssl }}/{{ certification.etcd.name }}-client.pem"
-cert_key:                         "{{ directory_ssl }}/{{ certification.etcd.name }}-client-key.pem"
+etcd_ca:                               "{{ directory_ssl }}/etcd-ca.pem"
+etcd_cert:                             "{{ directory_ssl }}/etcd-client.pem"
+etcd_cert_key:                         "{{ directory_ssl }}/etcd-client-key.pem"
 
 
 initial_cluster_state:            new

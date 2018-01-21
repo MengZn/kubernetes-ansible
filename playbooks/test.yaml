@@ -1,6 +1,7 @@
 ---
 - hosts: all
-  tasks:
-    - debug:
-        msg: "{{apple}}"
-    - debug: var=test
+  become: yes
+  roles:
+    - { role: certification, tags: generate-certification }
+    - { role: etcd, tags: etcd }
+    - { role: docker, tag: docker }

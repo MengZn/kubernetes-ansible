@@ -37,32 +37,32 @@ ca:
 
 local_ssl:      /tmp/ssl
 
-certification:
-  # local_ssl:      /tmp/ssl
-  ca_config:      ca-config.json
-  ca_csr:         ca-csr.json
-  client_csr:     client-csr.json
-
-  etcd:
-    name:         etcd
-  ca:
-    name:         ca
-  admin:
-    name:         admin
-  controller:
-    name:         controller
-  apiserver:
-    name:         apiserver
-  kubelet:
-    name:         kubelet
-  scheduler:
-    name:         scheduler
-  front-proxy:
-    name:         front-proxy
-  kube-proxy:
-    name:         kube-proxy
-  kubernetes:
-    name:         kubernetes
+# certification:
+#   # local_ssl:      /tmp/ssl
+#   ca_config:      ca-config.json
+#   ca_csr:         ca-csr.json
+#   client_csr:     client-csr.json
+#
+#   etcd:
+#     name:         etcd
+#   ca:
+#     name:         ca
+#   admin:
+#     name:         admin
+#   controller:
+#     name:         controller
+#   apiserver:
+#     name:         apiserver
+#   kubelet:
+#     name:         kubelet
+#   scheduler:
+#     name:         scheduler
+#   front-proxy:
+#     name:         front-proxy
+#   kube-proxy:
+#     name:         kube-proxy
+#   kubernetes:
+#     name:         kubernetes
 
 download:         /tmp
 opt:              /opt

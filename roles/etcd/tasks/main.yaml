@@ -5,14 +5,12 @@
   register: tmp_etcd
   with_items:
     - "{{ packages.etcd }}"
-# - name :
-  # debug:
-  #   msg :   "{{tmp_etcd.results[0]}}"
+
 - name:     If not,then Download etcd.
   get_url:
     url:    "{{ item.1.url }}/{{ item.1.file }}{{ item.1.format}}"
     dest:   "{{ download }}/{{ packages.etcd.file }}"
-  # when:     not tmp_etcd.results[item.0].stat.exists
+  when:     not tmp_etcd.results[item.0].stat.exists
   with_indexed_items:
     - "{{ packages.etcd }}"
   register: down
@@ -22,7 +20,7 @@
     src:    "{{ download }}/{{ item.1.file }}"
     dest:   "{{ opt }}"
     copy:   no
-  # when:     down.results[item.0].changed == true
+  when:     down.results[item.0].changed == true
   with_indexed_items:
     - "{{ packages.etcd }}"
   register: etcd_unarchived
@@ -34,25 +32,17 @@
   with_items:
     - "{{ packages.etcd }}"
 
-# - name:     Determine if Symlinks etcd exist.
-#   stat:
-#     path:   "{{ bin }}/{{ item }}"
-#   register: symlinks_etcd
-#   with_items:
-#   - "{{ packages.etcd.archive.file }}"
-#
-# - name:     Symlinks etcd
-#   file:
-#     src:    "{{ packages.etcd.archive.dir }}/{{ packages.etcd.file }}/{{ item.1 }}"
-#     dest:   "{{ bin }}/{{ item.1 }}"
-#     state:  link
-#     force:  yes
-#   # when:   "{{ not symlinks_etcd.results[item.0].stat.exists and etcd_tool }}"
-#   with_indexed_items:
-#   - "{{ packages.etcd.archive.file }}"
-#
-# - name:     Etcd configuration
-#   include:  config.yaml
-#
-# - name:     Add Etcd systemd service
-#   include:  systemd.yaml
+- name:     Symlinks etcd
+  file:
+    src:    "{{ opt }}/{{ packages.etcd.file }}/{{ item }}"
+    dest:   "{{ bin }}/{{ item }}"
+    state:  link
+    force:  yes
+  with_items:
+  - "{{ packages.etcd.archive.file }}"
+
+- name:     Etcd configuration
+  include:  config.yaml
+
+- name:     Add Etcd systemd service
+  include:  systemd.yaml
