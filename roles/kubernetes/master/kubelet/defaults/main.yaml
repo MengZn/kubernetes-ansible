@@ -1,9 +1,9 @@
 ---
 packages:
-  kubectl:
-    name:  kubectl
+  kubelet:
+    name:  kubelet
     dir: /opt/kubernetes
-    url: "{{ source.kubectl.url }}/{{ source.kubectl.version }}/bin/{{ source.kubectl.architecture}}/kubectl"
+    url: "{{ source.kubelet.url }}/{{ source.kubelet.version }}/bin/{{ source.kubelet.architecture}}/kubelet"
 
 kubeconfig: /etc/kubernetes/
 # /{{ source.kubectl.version }}/bin/{{ source.kubectl.architecture}}/kubectl

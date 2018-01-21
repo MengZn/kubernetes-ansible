@@ -14,6 +14,12 @@
 # CLUSTER_DNS_DOMAIN="cluster.local."
 # MASTER_URL="k8s-api.virtual.local"
 
+vip:              ''
+vip_interface:    ''
+vip_netmask:      ''
+vip_secure_port:  6443
+vip_api_url:      'https://{{ vip }}:{{ vip_secure_port }}'
+
 certification:
   local_ssl:      /tmp/ssl
   path:           /etc/ssl/certs/kubernetes
@@ -41,10 +47,14 @@ certification:
 kubernetes:
   dir:            /etc/kubernetes
   pki:            /etc/kubernetes/pki
+  manifest:       /etc/kubernetes/manifest
 
 download:         /tmp
 opt:              /opt
 bin:              /usr/local/bin
+
+
+
 source:
 # CA
   cfssl:

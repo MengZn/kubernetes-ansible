@@ -1,0 +1,31 @@
+global_defs {
+        router_id your_hostname
+        vrrp_version 2
+        vrrp_garp_master_delay 1
+        vrrp_garp_master_refresh
+    }
+
+    vrrp_script chk_haproxy {
+        script       "ss -ltn 'src {{ keepalived_check_ip }}' | grep ':{{ keepalived_check_port }}'"
+        timeout 1
+        interval 1
+        fall 2
+        rise 2
+    }
+
+    vrrp_instance VI_1 {
+        state BACKUP
+        interface {{ vip_interface }}
+        virtual_router_id {{ keepalived.vrid }}
+        priority 100
+        track_script {
+            check_haproxy
+        }
+        authentication {
+            auth_type PASS
+            auth_pass kubernetes
+        }
+        virtual_ipaddress {
+            {{ vip }}/{{ vip_netmask }} dev {{ vip_interface }}
+        }
+    }

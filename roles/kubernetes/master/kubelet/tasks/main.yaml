@@ -1,0 +1,21 @@
+- name:       If not, then set up kubelet.
+#   when:       not kubectl.stat.exists
+  block:
+    - name:   Download kublet binaries.
+      get_url:
+        url:  "{{ packages.kubelet.url }}"
+        dest: "{{ download }}/{{ packages.kubelet.name }}"
+        mode: 0755
+
+    - name:   Copy kubectl to {{ bin }}.
+      copy:
+        src:  "{{ download }}/{{ packages.kubelet.name }}"
+        dest: "{{ bin }}"
+        mode: 0755
+        remote_src: True
+
+  always:
+    - name:   Clean temporary files.
+      file:
+        path: "{{ download }}/{{ packages.kubelet.name }}"
+        state: absent

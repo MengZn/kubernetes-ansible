@@ -1,0 +1,18 @@
+---
+haproxy:
+  dir:        /etc/haproxy
+  admin:
+    port:     9999
+    user:     admin
+    password: admin
+keepalived:
+  vrid: 51
+image:
+  haproxy:
+    name:
+    repos:
+    tag:
+  keepalived:
+    name:
+    repos:
+    tag:

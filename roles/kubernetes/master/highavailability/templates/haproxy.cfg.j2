@@ -1,0 +1,33 @@
+global
+  daemon
+  maxconn 30000
+  log 127.0.0.1 local0 info
+  log 127.0.0.1 local1 warning
+
+defaults
+  log global
+  mode http
+  option http-keep-alive
+  option httplog
+  timeout connect 5000ms
+  timeout client 10000ms
+  timeout server 50000ms
+  timeout http-request 20000ms
+
+listen stats
+    bind *:{{ haproxy.admin.port }}
+    mode http
+    balance
+    stats uri /
+    stats auth {{ haproxy.admin.user }}:{{ haproxy.admin.password }}
+
+frontend api-https
+   mode tcp
+   bind *:{{ lb_secure_port }}
+   default_backend api-backend
+
+backend api-backend
+    mode tcp
+{% for host in groups['masters'] %}
+    server  api-{{ loop.index }}  {{ host }}:{{ api_secure_port }}  maxconn 300 check
+{% endfor %}

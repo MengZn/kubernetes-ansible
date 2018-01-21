@@ -1,55 +1,76 @@
 ---
-# - name:           Determine if kubctl binaries exist.if not ,set up .
+# - name:       Determine if kubctl binaries exist.if not ,set up .
 #   file:
-#     path:         {{ kubernetes.dir }}
-#     state:        directory
+#     path:     {{ kubernetes.dir }}
+#     state:    directory
 
-# - name :          test
+# - name :      test
 #   debug:
-#     msg:          "{{ source.kubectl.version }}"
+#     msg:      "{{ source.kubectl.version }}"
 #
 
-# - name:           Determine if kubctl binaries installation exist.
+# - name:       Determine if kubctl binaries installation exist.
 #   stat:
-#     path:         "{{ opt }}/{{ packages.kubctl.name }}"
-#   changed_when:   false
-#   register:       kubectl_bin
+#     path:     "{{ opt }}/{{ packages.kubctl.name }}"
+#   changed_when: false
+#   register:   kubectl_bin
 
-- name:             If not, then set up kubectl.
-#   when:           not kubectl.stat.exists
-  block:
-    - name:         Download kubctl binaries.
-      get_url:
-        url:        "{{ packages.kubectl.url }}"
-        dest:       "{{ download }}/{{ packages.kubectl.name }}"
-        mode:       0755
 
-    - name:         Copy kubectl to {{ bin }}.
-      copy:
-        src:        "{{ download }}/{{ packages.kubectl.name }}"
-        dest:       "{{ bin }}"
-        mode:       0755
-        remote_src: True
 
-    - name: Set Kubernetes cluster into config files
-      shell: |
-      "kubectl config set-cluster {{ certification.kubernetes.name }} \
-    	--certificate-authority={{ kubernetes.pki }}/{{ certification.ca.name }}-ca.pem \
-    	--embed-certs=true \
-    	--server={{ KUBE_APISERVER }}"
-    - name: 设置客户端认证参数
-      shell: |
-      "kubectl config set-credentials {{ certification.admin.name }} \
-    	--client-certificate={{ kubernetes.pki }}/{{ certification.admin.name }}-client.pem \
-    	--embed-certs=true \
-    	--client-key={{ kubernetes.pki }}/{{ certification.admin.name }}-client-key.pem"
-    - name: 设置上下文参数
-      shell: "{{ bin_dir }}/kubectl config set-context kubernetes \
-    	--cluster=kubernetes --user=admin"
-    - name: 选择默认上下文
-      shell: "{{ bin_dir }}/kubectl config use-context kubernetes"
+# - name:       If not, then set up kubectl.
+#   when:       not kubectl.stat.exists
+  # block:
+    # - name:   Download kubctl binaries.
+    #   get_url:
+    #     url:  "{{ packages.kubectl.url }}"
+    #     dest: "{{ download }}/{{ packages.kubectl.name }}"
+    #     mode: 0755
+    #
+    # - name:   Copy kubectl to {{ bin }}.
+    #   copy:
+    #     src:  "{{ download }}/{{ packages.kubectl.name }}"
+    #     dest: "{{ bin }}"
+    #     mode: 0755
+    #     remote_src: True
+
+    - name:     Determine if VIP exist.
+      when:     vip =='' and api_interface!=''
+      set_fact:
+          vip:  "{{api_interface}}"
+    - name:
+      debug:    var=ansible_{{vip}}.ipv4.address
+      # when:   "{{vip}}"
+
+    - name:   Set kubernetes admin cluster into config files
+      shell:  |
+        kubectl config set-cluster {{ certification.kubernetes.name }} \
+        --certificate-authority={{ kubernetes.pki }}/{{ certification.ca.name }}-ca.pem \
+        --embed-certs=true \
+        --server={{ VIP }} \
+        --kubeconfig={{ kubeconfig }}/{{ certification.admin.name }}
+
+    - name:   Set kubernetes admin credentials into config files
+      shell:  |
+        kubectl config set-credentials {{ certification.admin.name }} \
+        --client-certificate={{ kubernetes.pki }}/{{ certification.admin.name }}-client.pem \
+        --embed-certs=true \
+        --client-key={{ kubernetes.pki }}/{{ certification.admin.name }}-client-key.pem \
+        --kubeconfig={{ kubeconfig }}/{{ certification.admin.name }}
+
+    - name:   Set kubernetes admin context into config files
+      shell:  |
+        kubectl config set-context {{ certification.kubernetes.name }} \
+        --cluster={{ certification.kubernetes.name }} \
+        --user={{ certification.admin.name }} \
+        --kubeconfig={{ kubeconfig }}/{{ certification.admin.name }}
+
+    - name:   Use Kubernetes context config files
+      shell:  |
+        kubectl config use-context {{ certification.kubernetes.name }} \
+        --kubeconfig={{ kubeconfig }}/{{ certification.admin.name }}
+  
   always:
-    - name:         Clean temporary files.
+    - name:   Clean temporary files.
       file:
-        path:       "{{ download }}/{{ packages.kubectl.name }}"
-        state:      absent
+        path: "{{ download }}/{{ packages.kubectl.name }}"
+        state: absent

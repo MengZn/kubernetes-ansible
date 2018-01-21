@@ -1,0 +1,45 @@
+---
+
+- name:      Create Kubernetes manifests directory
+  file:
+    path:    {{ kubernetes.manifest }}
+    state:   directory
+
+# - name:    Copy Keepalived manifest frome deploy node
+#   when:    keepalived
+#   template:
+#     src:   "keepalived.yml.j2"
+#     dest:  {{ kubernetes.manifest }}/keepalived.yaml
+
+- name:      Ensure Keepalived is installed
+  apt:
+    name:    keepalived
+
+- name:      Copy Keepalived conf frome deploy node
+  template:
+    src:     keepalived.conf.j2
+    dest:    /etc/keepalived/keepalived.conf
+
+- name:      Ensure keepalived is started
+  service:
+    name:    keepalived
+    state:   started
+    enabled: yes
+
+- name:      Create HAProxy config directory
+  when:      haproxy
+  file:
+    path:    {{ haproxy.dir }}
+    state:   directory
+
+- name:      Copy HAProxy config file frome deploy node
+  when:      haproxy
+  template:
+    src:     "haproxy.cfg.j2"
+    dest:    {{ haproxy_etc_dir }}/haproxy.cfg
+
+- name:      Copy HAProxy manifest frome deploy node
+  when:      haproxy
+  template:
+    src:     "haproxy.yml.j2"
+    dest:    {{ kubernetes.dir.manifest }}/haproxy.yml
