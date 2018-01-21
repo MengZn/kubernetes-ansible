@@ -1,0 +1,75 @@
+---
+
+- name:       Determine if VIP exist.
+  when:       vip =='' and api_interface!=''
+  set_fact:
+      vip:    "{{api_interface}}"
+
+- name:       Setup kubernetes conf dir
+  file:
+    path:     "{{ kubeconfig }}"
+    state:    directory
+
+- name:       Set Kubernetes cluster into config files
+  shell:      |
+    kubectl config set-cluster kubernetes \
+    --certificate-authority={{ kubernetes.pki }}/ca-ca.pem \
+    --embed-certs=true \
+    --server={{ vip }} \
+    --kubeconfig={{ kubeconfig }}/{{ item }}.conf
+  with_items:
+    - "{{ fetch_ca }}"
+
+- name:     Set kubernetes credentials into config files
+  shell:    |
+    kubectl config set-credentials {{ item }} \
+    --client-certificate={{ kubernetes.pki }}/{{ item }}-client.pem \
+    --embed-certs=true \
+    --client-key={{ kubernetes.pki }}/{{ item }}-client-key.pem \
+    --kubeconfig={{ kubeconfig }}/{{ item }}.conf
+  with_items:
+    - "{{ fetch_ca }}"
+
+- name:     Set kubernetes context into config files
+  shell:    |
+    kubectl config set-context system:{{ item }} \
+    --cluster= kubernetes \
+    --user={{ item }} \
+    --kubeconfig={{ kubeconfig }}/{{ item }}
+  with_items:
+    - "{{ fetch_ca }}"
+
+- name:     Use Kubernetes context config files
+  shell:    |
+    kubectl config use-context {{ item }} \
+    --kubeconfig={{ kubeconfig }}/{{ item }}
+  with_items:
+    - "{{ fetch_ca }}"
+
+- name:    Set Kubernetes bootstrap cluster into config files
+  shell:      |
+    kubectl config set-cluster kubernetes \
+    --certificate-authority={{ kubernetes.pki }}/ca-ca.pem \
+    --embed-certs=true \
+    --server={{ vip }} \
+    --kubeconfig={{ kubeconfig }}/bootstrap.conf
+
+- name:     Set kubernetes bootstrap credentials into config files
+  shell:    |
+    kubectl config set-credentials bootstrap \
+    --token={{ token.bootstrap }} \
+    --kubeconfig={{ kubeconfig }}/bootstrap.conf
+
+- name:     Set kubernetes bootstrap context into config files
+  shell:    |
+    kubectl config set-context default \
+    --cluster= kubernetes \
+    --user=bootstrap \
+    --kubeconfig={{ kubeconfig }}/bootstrap.conf
+  with_items:
+    - "{{ fetch_ca }}"
+
+- name:     Use Kubernetes bootstrap context config files
+  shell:    |
+    kubectl config use-context bootstrap\
+    --kubeconfig={{ kubeconfig }}/bootstrap.cong

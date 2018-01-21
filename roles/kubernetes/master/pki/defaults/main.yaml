@@ -1,5 +1,5 @@
 ---
-
+kubeconfig: /etc/kubernetes/config
 fetch_ca:
   - apiserver
   - kubelet

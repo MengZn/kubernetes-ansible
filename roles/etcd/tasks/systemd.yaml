@@ -4,9 +4,7 @@
   file:
     path:          "{{ directory_data }}"
     state:         directory
-#
-#   debug:
-#     msg:
+
 - name:            Copy etcd systemd service frome deploy node
   template:
     src:           etcd.service.j2

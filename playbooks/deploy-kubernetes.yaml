@@ -3,5 +3,5 @@
 - hosts:  masters
   become: yes
   roles:
-    # - { role: kubernetes/master/pki, tags: kubernetes }
-    - { role: kubernetes/master/kubelet, tags: kubernetes }
+    - { role: kubernetes/master/kubectl, tags: kubernetes }
+    - { role: kubernetes/master/pki, tags: kubernetes }

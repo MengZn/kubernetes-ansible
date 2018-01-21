@@ -2,40 +2,60 @@
 
 - name:        Create SSL CA files
   shell:       |
-    cfssl gencert -initca {{ item.ca_csr_path }} | \
-    cfssljson -bare {{ item.path }}/{{ item.server_bare }}
+    cfssl gencert -initca {{ path }}/{{ item }}/{{ item }}-{{ ca_csr }} | \
+    cfssljson -bare {{ path }}/{{ item }}/{{ item }}-ca
   with_items:
     - "{{ ca }}"
-    - "{{ etcd }}"
   delegate_to: "{{ groups['masters'][0] }}"
   run_once:    true
 
 - name:        create certificate and private key
   shell:       |
-    cd {{ item.path }} &&
+    cd {{ path }}/{{ item .file }} &&
     cfssl gencert \
-    -ca={{ item.ca_path }}/{{ item.server_bare }}.pem \
-    -ca-key={{ item.ca_path }}/{{ item.server_bare}}-key.pem \
-    -config={{ item.ca_config_path }} \
-    -hostname={{ item.hosts }} \
+    -ca={{ path }}/{{ item.ca }}/{{ item.ca }}-ca.pem \
+    -ca-key={{ path }}/{{ item.ca }}/{{ item.ca }}-ca-key.pem \
+    -config={{ path }}/{{ item.ca }}/{{ item.ca }}-{{ ca_config }} \
+    {% if item.hosts is defined -%}
+      -hostname={{ item.hosts }} \
+    {% endif -%}
     -profile={{ profile }} \
-    {{ item.client_csr_path }} | cfssljson -bare {{ item.client_bare }}
+    {{ path }}/{{ item.file }}/{{ item.file }}-{{ client_csr }} | cfssljson -bare {{ item.bare }}
   with_items:
-    - "{{ ca }}"
-    - "{{ etcd }}"
-    - "{{ admin }}"
-    - "{{ apiserver }}"
-    - "{{ controller }}"
-    - "{{ kubelet }}"
-    - "{{ scheduler }}"
+    - { file: etcd,               ca: etcd, hosts: "{{ etcd.hosts }}", bare: etcd-client }
+    - { file: ca,                 ca: ca, hosts: "{{ apiserver.hosts }}", bare: ca-client }
+    - { file: apiserver,          ca: ca, hosts: "{{ apiserver.hosts }}", bare: apiserver-client }
+    - { file: admin,              ca: ca, bare: admin-client }
+    - { file: kube_proxy,         ca: ca, bare: kube_proxy-client }
+    - { file: controller,         ca: ca, hosts: "{{ master.hosts }}", bare: controller-client }
+    - { file: scheduler,          ca: ca, hosts: "{{ master.hosts }}", bare: scheduler-client }
+    - { file: front_proxy,        ca: front_proxy, bare: front_proxy-client }
+    - { file: bootstrap,          ca: ca, bare: bootstrap-client }
+  delegate_to: "{{ groups['masters'][0] }}"
+  run_once:    true
+
+- name:        create token.csv frome deploy node
+  template:
+    src:       "token.csv.j2"
+    dest:      "{{ path }}/token.csv"
   delegate_to: "{{ groups['masters'][0] }}"
   run_once:    true
 
 - name:        Fetch kubernetes ca files to deploy node
   fetch:
-    src:       "{{ certification.path }}/{{ item[0] }}/{{ item[0] }}{{ item[1] }}"
-    dest:      "{{ certification.local_ssl }}/{{ item[0] }}/{{ item[0] }}{{ item[1] }}"
+    src:       "{{ path }}/{{ item[0] }}/{{ item[0] }}{{ item[1] }}"
+    dest:      "{{ local_ssl }}/{{ item[0] }}/{{ item[0] }}{{ item[1] }}"
     flat:      yes
+  delegate_to: "{{ groups['masters'][0] }}"
+  run_once:    true
   with_nested:
-    - "{{ fetch_ca }}"
-    - [-ca.pem,-ca-config.json, -ca.csr, -ca-key.pem,-client.csr, -client-key.pem, -client.pem]
+    - "{{ certification }}"
+    - [-ca.pem,-ca.csr,-ca-key.pem,-client.csr,-client-key.pem,-client.pem]
+
+- name:        Fetch token.csv files to deploy node
+  fetch:
+    src:       "{{ path }}/token.csv"
+    dest:      "{{ local_ssl }}/token.csv"
+    flat:      yes
+  delegate_to: "{{ groups['masters'][0] }}"
+  run_once:    true

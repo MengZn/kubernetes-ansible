@@ -1,14 +1,14 @@
 [etcds]
-10.0.0.12 ansible_ssh_user=vagrant etcd_interface=eth1 api_interface=eth1 vip_interface=eth1
-10.0.0.11 ansible_ssh_user=vagrant etcd_interface=eth1 api_interface=eth1 vip_interface=eth1
+10.0.0.12 ansible_ssh_user=vagrant etcd_interface=eth1
+10.0.0.11 ansible_ssh_user=vagrant etcd_interface=eth1
 
 [masters]
-10.0.0.12 ansible_ssh_user=vagrant etcd_interface=eth1 api_interface=eth1 vip_interface=eth1
-10.0.0.11 ansible_ssh_user=vagrant etcd_interface=eth1 api_interface=eth1 vip_interface=eth1
+10.0.0.12 ansible_ssh_user=vagrant etcd_interface=eth1 vip_interface=eth1
+10.0.0.11 ansible_ssh_user=vagrant etcd_interface=eth1
 
 [nodes]
-10.0.0.12 ansible_ssh_user=vagrant etcd_interface=eth1 api_interface=eth1 vip_interface=eth1
-10.0.0.11 ansible_ssh_user=vagrant etcd_interface=eth1 api_interface=eth1 vip_interface=eth1
+10.0.0.12 ansible_ssh_user=vagrant etcd_interface=eth1
+10.0.0.11 ansible_ssh_user=vagrant etcd_interface=eth1
 
 [kube-cluster:children]
 masters

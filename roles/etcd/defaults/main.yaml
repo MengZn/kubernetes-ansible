@@ -15,7 +15,6 @@ packages:
     url:                          "{{ source.etcd.url }}/{{ source.etcd.version }}"
     file:                         "etcd-{{ source.etcd.version }}-linux-amd64"
     format:                       ".tar.gz"
-    dir:                          /opt/etcd
     archive:
       state:                      true
       dir:                        /opt

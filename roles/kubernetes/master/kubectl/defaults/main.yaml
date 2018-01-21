@@ -4,6 +4,3 @@ packages:
     name:  kubectl
     dir: /opt/kubernetes
     url: "{{ source.kubectl.url }}/{{ source.kubectl.version }}/bin/{{ source.kubectl.architecture}}/kubectl"
-
-kubeconfig: /etc/kubernetes/
-# /{{ source.kubectl.version }}/bin/{{ source.kubectl.architecture}}/kubectl

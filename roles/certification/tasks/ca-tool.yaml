@@ -1,7 +1,7 @@
 ---
-- name:               Determine if tools exist.
+- name:               Determine if CA tools exist.
   stat:
-    path:             "{{ download }}/{{ item.file }}"
+    path:             "{{ opt }}/{{ item.name }}"
   register:           tmp_ca_tool
   delegate_to:        "{{ groups['masters'][0] }}"
   run_once:           true
@@ -9,11 +9,11 @@
   - "{{ packages.cfssl }}"
   - "{{ packages.cfssljson }}"
 
-- name:               Download CA tools.
+- name:               Download CA tools to {{ download }}.
   get_url:
     url:              "{{ item.1.url }}/{{ item.1.file }}"
     dest:             "{{ download }}/{{ item.1.file }}"
-  when:               "{{ not tmp_ca_tool.results[item.0].stat.exists }}"
+  when:               not tmp_ca_tool.results[item.0].stat.exists
   delegate_to:        "{{ groups['masters'][0] }}"
   run_once:           true
   with_indexed_items:
@@ -21,49 +21,38 @@
   - "{{ packages.cfssljson }}"
   register:           ca_tool_down
 
-- name:               Determine if CA tools in current directory.
-  stat:
-    path:             "{{ item.dir }}"
-  register:           ca_tool_current_dir
-  delegate_to:        "{{ groups['masters'][0] }}"
-  run_once:           true
-  with_items:
-  - "{{ packages.cfssl }}"
-  - "{{ packages.cfssljson }}"
-
-- name:               copy CA tools to current directory.
-  when:               "{{ not ca_tool_current_dir.results[item.0].stat.exists }}"
+- name:               copy CA tools to {{ opt }}.
+  when:               ca_tool_down.results[item.0].changed ==true
   copy:
     src:              "{{ download }}/{{  item.1.file }}"
-    dest:             "{{ item.1.dir }}"
+    dest:             "{{ opt }}/{{ item.1.name }}"
     owner:            root
     group:            root
     mode:             0755
     remote_src:       True
-  register:           ca_tool
   delegate_to:        "{{ groups['masters'][0] }}"
   run_once:           true
   with_indexed_items:
   - "{{ packages.cfssl }}"
   - "{{ packages.cfssljson }}"
 
-- name:               Determine if Symlinks CA tools exist.
-  stat:
-    path:             "{{ bin }}/{{ item.name }}"
-  register:           symlinks_ca_tool
+- name:               Clean temporary files.
+  file:
+    path:             "{{ download }}/{{ item.file }}"
+    state:            absent
   delegate_to:        "{{ groups['masters'][0] }}"
   run_once:           true
   with_items:
   - "{{ packages.cfssl }}"
   - "{{ packages.cfssljson }}"
 
+
 - name:               "Symlinks CA tools."
   file:
-    src:              "{{ item.1.dir }}"
+    src:              "{{ opt }}/{{ item.1.name }}"
     dest:             "{{ bin }}/{{ item.1.name }}"
     state:            link
     force:            yes
-  when:               "{{ not symlinks_ca_tool.results[item.0].stat.exists and ca_tool}} "
   delegate_to:        "{{ groups['masters'][0] }}"
   run_once:           true
   with_indexed_items:

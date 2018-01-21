@@ -1,0 +1,49 @@
+- name:               Determine if SSL certificate directory exist,If not, then set up directory.
+  file:
+    path:             "{{ path }}/{{ item }}"
+    state:            directory
+  with_items:
+    - "{{ kubernetes.certification }}"
+  delegate_to:        "{{ groups['masters'][0] }}"
+  run_once:           true
+  register:           ssl_directory
+
+- name:               Determine if SSL CA config exist.
+  stat:
+    path:             "{{ path }}/{{ item }}/{{ item }}-{{ ca_config }}"
+  with_items:
+    - "{{ ca }}"
+  delegate_to:        "{{ groups['masters'][0] }}"
+  run_once:           true
+  register:           config
+
+- name:               If not, then set up SSL CA config.
+  when:               not config.results[item.0].stat.exists
+  template:
+    src:              ca-config.json.j2
+    dest:             "{{ path }}/{{ item.1 }}/{{ item.1 }}-{{ ca_config }}"
+    mode:             '0600'
+  with_indexed_items:
+    - "{{ ca }}"
+  delegate_to:        "{{ groups['masters'][0] }}"
+  run_once:           true
+
+- name:               Determine if SSL certificate csr config exist
+  stat:
+    path:             "{{ path }}/{{ item }}/{{ item }}-{{ ca_csr }}"
+  with_items:
+    - "{{ ca }}"
+  delegate_to:        "{{ groups['masters'][0] }}"
+  run_once:           true
+  register:           csr
+
+- name:               If not, then set up SSL certificate csr config
+  when:               not csr.results[item.0].stat.exists
+  template:
+    src:              ca-csr.json.j2
+    dest:             "{{ path }}/{{ item.1 }}/{{ item.1 }}-{{ca_csr }}"
+    mode:             '0600'
+  with_indexed_items:
+    - "{{ ca }}"
+  delegate_to:        "{{ groups['masters'][0] }}"
+  run_once:           true

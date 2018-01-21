@@ -1,0 +1,15 @@
+[Unit]
+Description=Kubernetes Kubelet Server
+After=docker.service
+Requires=docker.service
+Documentation=http://kubernetes.io/docs/
+
+[Service]
+ExecStart={{ bin }}/kubelet
+EnvironmentFile=-{{ directory }}/kubelet.conf
+WorkingDirectory=/var/lib/kubelet
+Restart=on-failure
+
+
+[Install]
+WantedBy=multi-user.target

@@ -1,106 +1,106 @@
 ---
 etcd:
-  hosts:           "{% for node in groups['etcds'] %}{{ node }}{% if not loop.last %},{% endif %}{% endfor %}"
-  path:            "{{ certification.path }}/{{ certification.etcd.name }}"
-  server_bare:     "{{ certification.etcd.name }}-ca"
-  client_bare:     "{{ certification.etcd.name }}-client"
-  ca_path:         "{{ certification.path }}/{{ certification.etcd.name }}"
-  ca_config_path:  "{{ certification.path }}/{{ certification.etcd.name }}/{{ certification.etcd.name }}-{{ certification.ca_config }}"
-  ca_csr_path:     "{{ certification.path }}/{{ certification.etcd.name }}/{{ certification.etcd.name }}-{{ certification.ca_csr }}"
-  client_csr_path: "{{ certification.path }}/{{ certification.etcd.name }}/{{ certification.etcd.name }}-{{ certification.client_csr }}"
-  name:            "{{ certification.etcd.name }}"
-  org:             "{{ certification.etcd.name }}"
-ca:
-  hosts:           "{{ vip }},{% for node in groups['masters'] %}{{ node }}{% if not loop.last %},{% endif %}{% endfor %}"
-  path:            "{{ certification.path }}/{{ certification.ca.name }}"
-  server_bare:     "{{ certification.ca.name }}-ca"
-  client_bare:     "{{ certification.ca.name }}-client"
-  ca_path:         "{{ certification.path }}/{{ certification.ca.name }}"
-  ca_config_path:  "{{ certification.path }}/{{ certification.ca.name }}/{{ certification.ca.name }}-{{ certification.ca_config }}"
-  ca_csr_path:     "{{ certification.path }}/{{ certification.ca.name }}/{{ certification.ca.name }}-{{ certification.ca_csr }}"
-  client_csr_path: "{{ certification.path }}/{{ certification.ca.name }}/{{ certification.ca.name }}-{{ certification.client_csr }}"
-  name:            "{{ certification.kubernetes.name }}"
-  org:             "{{ certification.kubernetes.name }}"
-
-admin:
-  hosts:           "{% for node in groups['masters'] %}{{ node }},{% endfor %}"
-  path:            "{{ certification.path }}/{{ certification.admin.name }}"
-  server_bare:     "{{ certification.ca.name }}-ca"
-  client_bare:     "{{ certification.admin.name }}-client"
-  ca_path:         "{{ certification.path }}/{{ certification.ca.name }}"
-  ca_config_path:  "{{ certification.path }}/{{ certification.ca.name }}/{{ certification.ca.name }}-{{ certification.ca_config }}"
-  client_csr_path: "{{ certification.path }}/{{ certification.admin.name }}/{{ certification.admin.name }}-{{ certification.client_csr }}"
-  name:            "{{ certification.kubernetes.name }}"
-  org:             "{{ certification.kubernetes.name }}"
-
+  hosts:      "{% for node in groups['etcds'] %}{{ node }}{% if not loop.last %},{% endif %}{% endfor %}"
+#   path:     "{{ certification.path }}/{{ certification.etcd.name }}"
+#   server_bare: "{{ certification.etcd.name }}-ca"
+#   client_bare: "{{ certification.etcd.name }}-client"
+#   ca_path:  "{{ certification.path }}/{{ certification.etcd.name }}"
+#   ca_config_path: "{{ certification.path }}/{{ certification.etcd.name }}/{{ certification.etcd.name }}-{{ certification.ca_config }}"
+#   ca_csr_path: "{{ certification.path }}/{{ certification.etcd.name }}/{{ certification.etcd.name }}-{{ certification.ca_csr }}"
+#   client_csr_path: "{{ certification.path }}/{{ certification.etcd.name }}/{{ certification.etcd.name }}-{{ certification.client_csr }}"
+#   name:     "{{ certification.etcd.name }}"
+#   org:      "{{ certification.etcd.name }}"
+# ca:
+#   hosts:    "{{ vip }},{% for node in groups['masters'] %}{{ node }}{% if not loop.last %},{% endif %}{% endfor %}"
+#   path:     "{{ certification.path }}/{{ certification.ca.name }}"
+#   server_bare: "{{ certification.ca.name }}-ca"
+#   client_bare: "{{ certification.ca.name }}-client"
+#   ca_path:  "{{ certification.path }}/{{ certification.ca.name }}"
+#   ca_config_path: "{{ certification.path }}/{{ certification.ca.name }}/{{ certification.ca.name }}-{{ certification.ca_config }}"
+#   ca_csr_path: "{{ certification.path }}/{{ certification.ca.name }}/{{ certification.ca.name }}-{{ certification.ca_csr }}"
+#   client_csr_path: "{{ certification.path }}/{{ certification.ca.name }}/{{ certification.ca.name }}-{{ certification.client_csr }}"
+#   name:     "{{ certification.kubernetes.name }}"
+#   org:      "{{ certification.kubernetes.name }}"
+#
+# admin:
+#   hosts:    "{{ vip }},{% for node in groups['masters'] %}{{ node }}{% if not loop.last %},{% endif %}{% endfor %}"
+#   path:     "{{ certification.path }}/{{ certification.admin.name }}"
+#   server_bare: "{{ certification.ca.name }}-ca"
+#   client_bare: "{{ certification.admin.name }}-client"
+#   ca_path:  "{{ certification.path }}/{{ certification.ca.name }}"
+#   ca_config_path: "{{ certification.path }}/{{ certification.ca.name }}/{{ certification.ca.name }}-{{ certification.ca_config }}"
+#   client_csr_path: "{{ certification.path }}/{{ certification.admin.name }}/{{ certification.admin.name }}-{{ certification.client_csr }}"
+#   name:     "{{ certification.kubernetes.name }}"
+#   org:      "{{ certification.kubernetes.name }}"
+#
 apiserver:
-  hosts:           "{{ vip }},{{ ca.hosts }},127.0.0.1,kubernetes.default"
-  path:            "{{ certification.path }}/{{ certification.apiserver.name }}"
-  server_bare:     "{{ certification.ca.name }}-ca"
-  client_bare:     "{{ certification.apiserver.name }}-client"
-  ca_path:         "{{ certification.path }}/{{ certification.ca.name }}"
-  ca_config_path:  "{{ certification.path }}/{{ certification.ca.name }}/{{ certification.ca.name }}-{{ certification.ca_config }}"
-  client_csr_path: "{{ certification.path }}/{{ certification.apiserver.name }}/{{ certification.apiserver.name }}-{{ certification.client_csr }}"
-  name:            "{{ certification.kubernetes.name }}"
-  org:             "{{ certification.kubernetes.name }}"
-
-controller:
-  hosts:           "{% for node in groups['masters'] %}{{ node }},{% endfor %}"
-  path:            "{{ certification.path }}/{{ certification.controller.name }}"
-  server_bare:     "{{ certification.ca.name }}-ca"
-  client_bare:     "{{ certification.controller.name }}-client"
-  ca_path:         "{{ certification.path }}/{{ certification.ca.name }}"
-  ca_config_path:  "{{ certification.path }}/{{ certification.ca.name }}/{{ certification.ca.name }}-{{ certification.ca_config }}"
-  client_csr_path: "{{ certification.path }}/{{ certification.controller.name }}/{{ certification.controller.name }}-{{ certification.client_csr }}"
-  name:            "{{ certification.kubernetes.name }}"
-  org:             "{{ certification.kubernetes.name }}"
-
-scheduler:
-  hosts:           "{% for node in groups['masters'] %}{{ node }},{% endfor %}"
-  path:            "{{ certification.path }}/{{ certification.scheduler.name }}"
-  server_bare:     "{{ certification.ca.name }}-ca"
-  client_bare:     "{{ certification.scheduler.name }}-client"
-  ca_path:         "{{ certification.path }}/{{ certification.ca.name }}"
-  ca_config_path:  "{{ certification.path }}/{{ certification.ca.name }}/{{ certification.ca.name }}-{{ certification.ca_config }}"
-  client_csr_path: "{{ certification.path }}/{{ certification.scheduler.name }}/{{ certification.scheduler.name }}-{{ certification.client_csr }}"
-  name:            "{{ certification.kubernetes.name }}"
-  org:             "{{ certification.kubernetes.name }}"
-
-kubelet:
-  hosts:           "{% for node in groups['masters'] %}{{ node }},{% endfor %}"
-  path:            "{{ certification.path }}/{{ certification.kubelet.name }}"
-  server_bare:     "{{ certification.ca.name }}-ca"
-  client_bare:     "{{ certification.kubelet.name }}-client"
-  ca_path:         "{{ certification.path }}/{{ certification.ca.name }}"
-  ca_config_path:  "{{ certification.path }}/{{ certification.ca.name }}/{{ certification.ca.name }}-{{ certification.ca_config }}"
-  client_csr_path: "{{ certification.path }}/{{ certification.kubelet.name }}/{{ certification.kubelet.name }}-{{ certification.client_csr }}"
-  name:            "{{ certification.kubernetes.name }}"
-  org:             "{{ certification.kubernetes.name }}"
+  hosts:      "{{ vip }},{% for node in groups['masters'] %}{{ node }}{% if not loop.last %},{% endif %}{% endfor %},127.0.0.1,kubernetes.default"
+#   path:     "{{ certification.path }}/{{ certification.apiserver.name }}"
+#   server_bare: "{{ certification.ca.name }}-ca"
+#   client_bare: "{{ certification.apiserver.name }}-client"
+#   ca_path:  "{{ certification.path }}/{{ certification.ca.name }}"
+#   ca_config_path: "{{ certification.path }}/{{ certification.ca.name }}/{{ certification.ca.name }}-{{ certification.ca_config }}"
+#   client_csr_path: "{{ certification.path }}/{{ certification.apiserver.name }}/{{ certification.apiserver.name }}-{{ certification.client_csr }}"
+#   name:     "{{ certification.kubernetes.name }}"
+#   org:      "{{ certification.kubernetes.name }}"
+#
+master:
+  hosts:      "{% for node in groups['masters'] %}{{ node }},{% endfor %}"
+#   path:     "{{ certification.path }}/{{ certification.controller.name }}"
+#   server_bare: "{{ certification.ca.name }}-ca"
+#   client_bare: "{{ certification.controller.name }}-client"
+#   ca_path:  "{{ certification.path }}/{{ certification.ca.name }}"
+#   ca_config_path: "{{ certification.path }}/{{ certification.ca.name }}/{{ certification.ca.name }}-{{ certification.ca_config }}"
+#   client_csr_path: "{{ certification.path }}/{{ certification.controller.name }}/{{ certification.controller.name }}-{{ certification.client_csr }}"
+#   name:     "{{ certification.kubernetes.name }}"
+#   org:      "{{ certification.kubernetes.name }}"
+#
+# scheduler:
+#   hosts:    "{% for node in groups['masters'] %}{{ node }},{% endfor %}"
+#   path:     "{{ certification.path }}/{{ certification.scheduler.name }}"
+#   server_bare: "{{ certification.ca.name }}-ca"
+#   client_bare: "{{ certification.scheduler.name }}-client"
+#   ca_path:  "{{ certification.path }}/{{ certification.ca.name }}"
+#   ca_config_path: "{{ certification.path }}/{{ certification.ca.name }}/{{ certification.ca.name }}-{{ certification.ca_config }}"
+#   client_csr_path: "{{ certification.path }}/{{ certification.scheduler.name }}/{{ certification.scheduler.name }}-{{ certification.client_csr }}"
+#   name:     "{{ certification.kubernetes.name }}"
+#   org:      "{{ certification.kubernetes.name }}"
+#
+# kubelet:
+#   hosts:    "{% for node in groups['masters'] %}{{ node }},{% endfor %}"
+#   path:     "{{ certification.path }}/{{ certification.kubelet.name }}"
+#   server_bare: "{{ certification.ca.name }}-ca"
+#   client_bare: "{{ certification.kubelet.name }}-client"
+#   ca_path:  "{{ certification.path }}/{{ certification.ca.name }}"
+#   ca_config_path: "{{ certification.path }}/{{ certification.ca.name }}/{{ certification.ca.name }}-{{ certification.ca_config }}"
+#   client_csr_path: "{{ certification.path }}/{{ certification.kubelet.name }}/{{ certification.kubelet.name }}-{{ certification.client_csr }}"
+#   name:     "{{ certification.kubernetes.name }}"
+#   org:      "{{ certification.kubernetes.name }}"
 
 packages:
   cfssl:
-    name:          cfssl
-    url:           "{{ source.cfssl.url }}/{{ source.cfssl.version }}"
-    file:          cfssl_linux-amd64
-    dir:           /opt/cfssl
+    name:     cfssl
+    url:      "{{ source.cfssl.url }}/{{ source.cfssl.version }}"
+    file:     cfssl_linux-amd64
 
   cfssljson:
-    name:          cfssljson
-    url:           "{{ source.cfssljson.url }}/{{ source.cfssljson.version }}"
-    file:          cfssljson_linux-amd64
-    dir:           /opt/cfssljson
+    name:     cfssljson
+    url:      "{{ source.cfssljson.url }}/{{ source.cfssljson.version }}"
+    file:     cfssljson_linux-amd64
+
+path:         /etc/ssl/certs/kubernetes
 
 key:
-  algo:            rsa
-  size:            2048
+  algo:       rsa
+  size:       2048
 names:
-  c:               Taiwain
-  st:              Taipei
-  l:               Taipei
-  ou:              Kubernetes
+  c:          Taiwain
+  st:         Taipei
+  l:          Taipei
+  ou:         Kubernetes
 
-expiry:            87600h
-profile:           kubernetes
+expiry:       87600h
+profile:      kubernetes
 
 fetch_ca:
   - ca

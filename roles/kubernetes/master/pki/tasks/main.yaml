@@ -1,25 +1,14 @@
 ---
+- name:        Set up Kubernetes dir.
+  file:
+    path:      "{{ kubernetes.dir }}"
+    state:     directory
+
 - name:        Set up Kubernetes pki dir.
   file:
     path:      "{{ kubernetes.pki }}"
     state:     directory
 
+- include: copy.yaml
 
-- name:        Copy ca pki frome deploy node
-  copy:
-    src:       "{{ certification.local_ssl }}/{{ item[0] }}/{{ item[0] }}{{ item[1] }}"
-    dest:      "{{ kubernetes.pki }}/{{ item[0] }}{{ item[1] }}"
-  with_nested:
-    - " ca "
-    - [-ca.pem,-ca-config.json, -ca.csr, -ca-key.pem,-client.csr, -client-key.pem, -client.pem]
-
-- name:        Copy kubernetes client pki frome deploy node
-  copy:
-    src:       "{{ certification.local_ssl }}/{{ item[0] }}/{{ item[0] }}{{ item[1] }}"
-    dest:      "{{ kubernetes.pki }}/{{ item[0] }}{{ item[1] }}"
-  with_nested:
-    - "{{ fetch_ca }}"
-    - [-client.csr, -client-key.pem, -client.pem]
-
-# ca-ca-config.json ca-ca-key.pem     ca-ca.csr         ca-ca.pem         ca-client-key.pem ca-client.csr     ca-client.pem
-# admin-client-key.pem admin-client.csr     admin-client.pem
+- include: setup.yaml

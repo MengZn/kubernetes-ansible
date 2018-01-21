@@ -5,7 +5,7 @@
     ], 
     "ansible_all_ipv6_addresses": [
         "fe80::a00:27ff:fe10:47e3", 
-        "fe80::a00:27ff:fe68:30e7"
+        "fe80::a00:27ff:fe59:e9b7"
     ], 
     "ansible_apparmor": {
         "status": "enabled"
@@ -22,22 +22,22 @@
         "root": "/dev/mapper/vagrant--vg-root"
     }, 
     "ansible_date_time": {
-        "date": "2018-01-20", 
-        "day": "20", 
-        "epoch": "1516468396", 
-        "hour": "17", 
-        "iso8601": "2018-01-20T17:13:16Z", 
-        "iso8601_basic": "20180120T171316184488", 
-        "iso8601_basic_short": "20180120T171316", 
-        "iso8601_micro": "2018-01-20T17:13:16.184552Z", 
-        "minute": "13", 
+        "date": "2018-01-21", 
+        "day": "21", 
+        "epoch": "1516559323", 
+        "hour": "18", 
+        "iso8601": "2018-01-21T18:28:43Z", 
+        "iso8601_basic": "20180121T182843994863", 
+        "iso8601_basic_short": "20180121T182843", 
+        "iso8601_micro": "2018-01-21T18:28:43.994936Z", 
+        "minute": "28", 
         "month": "01", 
-        "second": "16", 
-        "time": "17:13:16", 
+        "second": "43", 
+        "time": "18:28:43", 
         "tz": "UTC", 
         "tz_offset": "+0000", 
-        "weekday": "Saturday", 
-        "weekday_number": "6", 
+        "weekday": "Sunday", 
+        "weekday_number": "0", 
         "weeknumber": "03", 
         "year": "2018"
     }, 
@@ -65,16 +65,16 @@
                 "dm-uuid-LVM-sxuKWdkumO61fAzs0s7jlG9QS50GoHhvwuzq6ZuQ9d8as62qBXOMDdsQinXDhRy9"
             ], 
             "sda": [
-                "ata-VBOX_HARDDISK_VB2cfc71f9-0f56cfdf"
+                "ata-VBOX_HARDDISK_VB629c71e0-c011fdeb"
             ], 
             "sda1": [
-                "ata-VBOX_HARDDISK_VB2cfc71f9-0f56cfdf-part1"
+                "ata-VBOX_HARDDISK_VB629c71e0-c011fdeb-part1"
             ], 
             "sda2": [
-                "ata-VBOX_HARDDISK_VB2cfc71f9-0f56cfdf-part2"
+                "ata-VBOX_HARDDISK_VB629c71e0-c011fdeb-part2"
             ], 
             "sda5": [
-                "ata-VBOX_HARDDISK_VB2cfc71f9-0f56cfdf-part5", 
+                "ata-VBOX_HARDDISK_VB629c71e0-c011fdeb-part5", 
                 "lvm-pv-uuid-h5ujB7-Jnjg-ZmFL-je7P-GWbd-u8tt-IBz6hc"
             ]
         }, 
@@ -343,7 +343,7 @@
             "host": "SATA controller: Intel Corporation 82801HM/HEM (ICH8M/ICH8M-E) SATA Controller [AHCI mode] (rev 02)", 
             "links": {
                 "ids": [
-                    "ata-VBOX_HARDDISK_VB2cfc71f9-0f56cfdf"
+                    "ata-VBOX_HARDDISK_VB629c71e0-c011fdeb"
                 ], 
                 "labels": [], 
                 "masters": [], 
@@ -355,7 +355,7 @@
                     "holders": [], 
                     "links": {
                         "ids": [
-                            "ata-VBOX_HARDDISK_VB2cfc71f9-0f56cfdf-part1"
+                            "ata-VBOX_HARDDISK_VB629c71e0-c011fdeb-part1"
                         ], 
                         "labels": [], 
                         "masters": [], 
@@ -373,7 +373,7 @@
                     "holders": [], 
                     "links": {
                         "ids": [
-                            "ata-VBOX_HARDDISK_VB2cfc71f9-0f56cfdf-part2"
+                            "ata-VBOX_HARDDISK_VB629c71e0-c011fdeb-part2"
                         ], 
                         "labels": [], 
                         "masters": [], 
@@ -392,7 +392,7 @@
                     ], 
                     "links": {
                         "ids": [
-                            "ata-VBOX_HARDDISK_VB2cfc71f9-0f56cfdf-part5", 
+                            "ata-VBOX_HARDDISK_VB629c71e0-c011fdeb-part5", 
                             "lvm-pv-uuid-h5ujB7-Jnjg-ZmFL-je7P-GWbd-u8tt-IBz6hc"
                         ], 
                         "labels": [], 
@@ -432,6 +432,9 @@
     "ansible_dns": {
         "nameservers": [
             "10.0.2.3"
+        ], 
+        "search": [
+            "openvpn"
         ]
     }, 
     "ansible_domain": "", 
@@ -439,17 +442,27 @@
     "ansible_effective_user_id": 0, 
     "ansible_env": {
         "HOME": "/root", 
-        "LANG": "C", 
+        "LANG": "en_US.UTF-8", 
         "LANGUAGE": "en_US:", 
-        "LC_ALL": "C", 
+        "LC_ADDRESS": "en_US.UTF-8", 
+        "LC_ALL": "en_US.UTF-8", 
+        "LC_COLLATE": "en_US.UTF-8", 
         "LC_CTYPE": "zh_TW.UTF-8", 
-        "LC_MESSAGES": "C", 
+        "LC_IDENTIFICATION": "en_US.UTF-8", 
+        "LC_MEASUREMENT": "en_US.UTF-8", 
+        "LC_MESSAGES": "en_US.UTF-8", 
+        "LC_MONETARY": "en_US.UTF-8", 
+        "LC_NAME": "en_US.UTF-8", 
+        "LC_NUMERIC": "en_US.UTF-8", 
+        "LC_PAPER": "en_US.UTF-8", 
+        "LC_TELEPHONE": "en_US.UTF-8", 
+        "LC_TIME": "en_US.UTF-8", 
         "LOGNAME": "root", 
         "MAIL": "/var/mail/root", 
         "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games", 
         "PWD": "/home/vagrant", 
         "SHELL": "/usr/bin/zsh", 
-        "SUDO_COMMAND": "/bin/sh -c echo BECOME-SUCCESS-xpdyqrgngjziqwbpzuzyhfbudnjhajwf; /usr/bin/python", 
+        "SUDO_COMMAND": "/bin/sh -c echo BECOME-SUCCESS-eyjzecdepdolwfpcbkcsgfjbofuobmyx; /usr/bin/python", 
         "SUDO_GID": "1000", 
         "SUDO_UID": "1000", 
         "SUDO_USER": "vagrant", 
@@ -591,12 +604,12 @@
         }, 
         "ipv6": [
             {
-                "address": "fe80::a00:27ff:fe68:30e7", 
+                "address": "fe80::a00:27ff:fe59:e9b7", 
                 "prefix": "64", 
                 "scope": "link"
             }
         ], 
-        "macaddress": "08:00:27:68:30:e7", 
+        "macaddress": "08:00:27:59:e9:b7", 
         "module": "e1000", 
         "mtu": 1500, 
         "pciid": "0000:00:08.0", 
@@ -727,16 +740,16 @@
     }, 
     "ansible_machine": "x86_64", 
     "ansible_machine_id": "1631f6139e373e0b935ca8ce5a4c5685", 
-    "ansible_memfree_mb": 167, 
+    "ansible_memfree_mb": 205, 
     "ansible_memory_mb": {
         "nocache": {
-            "free": 870, 
-            "used": 122
+            "free": 872, 
+            "used": 120
         }, 
         "real": {
-            "free": 167, 
+            "free": 205, 
             "total": 992, 
-            "used": 825
+            "used": 787
         }, 
         "swap": {
             "cached": 0, 
@@ -748,18 +761,18 @@
     "ansible_memtotal_mb": 992, 
     "ansible_mounts": [
         {
-            "block_available": 14938209, 
+            "block_available": 14946618, 
             "block_size": 4096, 
             "block_total": 16098773, 
-            "block_used": 1160564, 
+            "block_used": 1152155, 
             "device": "/dev/mapper/vagrant--vg-root", 
             "fstype": "ext4", 
-            "inode_available": 4062023, 
+            "inode_available": 4062170, 
             "inode_total": 4104192, 
-            "inode_used": 42169, 
+            "inode_used": 42022, 
             "mount": "/", 
             "options": "rw,relatime,errors=remount-ro,data=ordered", 
-            "size_available": 61186904064, 
+            "size_available": 61221347328, 
             "size_total": 65940574208, 
             "uuid": "70f37bd5-9c28-49d6-824b-1ebf3c6c4d85"
         }, 
@@ -794,7 +807,7 @@
     "ansible_processor_vcpus": 1, 
     "ansible_product_name": "VirtualBox", 
     "ansible_product_serial": "0", 
-    "ansible_product_uuid": "C9A23D60-9062-4E9D-8F82-A2EA77FD38E4", 
+    "ansible_product_uuid": "8AB97FF4-F02D-4E8C-9F20-A740949C7016", 
     "ansible_product_version": "1.2", 
     "ansible_python": {
         "executable": "/usr/bin/python", 
@@ -872,7 +885,7 @@
     ], 
     "ansible_system_capabilities_enforced": "True", 
     "ansible_system_vendor": "innotek GmbH", 
-    "ansible_uptime_seconds": 494, 
+    "ansible_uptime_seconds": 6730, 
     "ansible_user_dir": "/root", 
     "ansible_user_gecos": "root", 
     "ansible_user_gid": 0, 
